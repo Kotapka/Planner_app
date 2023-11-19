@@ -1,17 +1,99 @@
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-# https://github.com/takari/maven-wrapper#usage-without-binary-jar
-.mvn/wrapper/maven-wrapper.jar
+# Pliki IDE
+.idea/
 
-# Eclipse m2e generated files
-# Eclipse Core
-.project
-# JDT-specific (Eclipse Java Development Tools)
-.classpath
+# Pliki kompilacji Maven
+target/
+
+# Pliki konfiguracyjne Spring Boot
+application*.properties
+application*.yml
+
+# Pliki logów
+log/
+
+# Katalogi generowane przez Eclipse
+bin/
+build/
+
+# Katalogi generowane przez IntelliJ
+out/
+
+# Katalogi generowane przez NetBeans
+build/
+nbbuild/
+dist/
+nbdist/
+nbi-build/
+.nb-gradle/
+
+# Katalogi generowane przez Visual Studio Code
+.vscode/
+
+# Katalogi generowane przez STS (Spring Tool Suite)
+.springBeans/
+
+# Katalog generowany przez Heroku
+target/
+
+# Katalogi
+/node_modules/
+/build/
+/dist/
+
+# Pliki
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Pliki konfiguracyjne
+/.env.local
+/.env.development.local
+/.env.test.local
+/.env.production.local
+
+# Plik yarn.lock
+yarn.lock
+
+# Plik package-lock.json
+package-lock.json
+
+# Plik .pnp.cjs wygenerowany przez Yarn 2
+.pnp.*
+
+# Katalogi generowane przez IDE
+.idea/
+.vscode/
+
+# Katalogi generowane przez edytory tekstowe
+/.vscode/
+/.idea/
+
+# Katalog coverage generowany przez narzędzia do testowania
+/coverage/
+
+# Pliky generowane przez TypeScript
+*.tsbuildinfo
+
+# Pliki konfiguracyjne dla TypeScript
+tsconfig*.json
+
+# Katalogi generowane przez Create React App
+/.pnp/
+/pnpify/
+
+# Pliki do debugowania
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/debug.log
+
+# Katalogi generowane przez Firebase
+.firebase/
+
+# Katalogi generowane przez Storybook
+/storybook-static/
