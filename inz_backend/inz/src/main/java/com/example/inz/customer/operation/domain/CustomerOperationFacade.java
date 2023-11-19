@@ -20,5 +20,8 @@ public class CustomerOperationFacade {
         return customerRepository.findAll();
     }
 
-    public void createNewCustomer(Customer customer){ customerRepository.save(customer); }
+    public void createNewCustomer(Customer customer){
+
+        customerRepository.save(customer);
+    }
 }
