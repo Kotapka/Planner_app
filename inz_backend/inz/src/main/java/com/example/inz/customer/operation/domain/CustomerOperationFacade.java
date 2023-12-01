@@ -20,8 +20,9 @@ public class CustomerOperationFacade {
         return customerRepository.findAll();
     }
 
-    public void createNewCustomer(Customer customer){
+    //Tworzenie nowego użytkownika
+    public void createNewCustomer(Customer customer){customerRepository.save(customer);}
 
-        customerRepository.save(customer);
-    }
+    //Sprawdzanie loginu i hasla
+
 }

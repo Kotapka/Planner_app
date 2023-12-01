@@ -7,12 +7,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/vi/customer")
+@RequestMapping(path = "/api")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomerController {
 
@@ -39,5 +40,19 @@ public class CustomerController {
                         .password(MD5.getMd5(customer.getPassword()))
                         .build());
         return customer;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody String loginRequest) {
+        System.out.println(loginRequest);
+        //TODO logowanie
+        return ResponseEntity.ok("Zalogowano pomyślnie!");
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody String loginRequest) {
+        System.out.println(loginRequest);
+        //TODO rejestracja
+        return ResponseEntity.ok("Zalogowano pomyślnie!");
     }
 }
