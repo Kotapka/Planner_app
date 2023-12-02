@@ -11,19 +11,21 @@ import org.springframework.context.annotation.Configuration;
 public class CustomerOperationFacadeConfiguration {
 
     CustomerRepository customerRepository;
+    CustomerMapper customerMapper;
 
     @Autowired
-    CustomerOperationFacadeConfiguration(CustomerRepository customerRepository){
+    CustomerOperationFacadeConfiguration(CustomerRepository customerRepository, CustomerMapper customerMapper){
         this.customerRepository = customerRepository;
+        this.customerMapper = customerMapper;
     }
 
     @Bean
     CustomerOperationFacade customerOperationFacade(){
-        return customerOperationFacade(customerRepository);
+        return customerOperationFacade(customerRepository, customerMapper);
     }
 
-    static CustomerOperationFacade customerOperationFacade(CustomerRepository customerRepository){
-        return new CustomerOperationFacade(customerRepository);
+    static CustomerOperationFacade customerOperationFacade(CustomerRepository customerRepository, CustomerMapper customerMapper){
+        return new CustomerOperationFacade(customerRepository, customerMapper);
     }
 
 }

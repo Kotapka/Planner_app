@@ -1,7 +1,12 @@
 package com.example.inz.customer.operation;
 
+import com.example.inz.configuration.UserAuthenticationProvider;
 import com.example.inz.customer.operation.domain.Customer;
 import com.example.inz.customer.operation.domain.CustomerOperationFacade;
+import com.example.inz.customer.operation.dto.CustomerDto;
+import com.example.inz.customer.operation.dto.LoginDto;
+import com.example.inz.customer.operation.dto.SignUpDto;
+import com.example.inz.customer.operation.exception.InvalidDataException;
 import com.example.inz.operations.MD5;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
@@ -10,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.net.URI;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -18,41 +23,29 @@ import java.util.List;
 public class CustomerController {
 
     private final CustomerOperationFacade customerOperationFacade;
+    private final UserAuthenticationProvider userAuthenticationProvider;
 
     @Autowired
-    public CustomerController(CustomerOperationFacade customerOperationFacade) {
+    public CustomerController(CustomerOperationFacade customerOperationFacade, UserAuthenticationProvider userAuthenticationProvider) {
         this.customerOperationFacade = customerOperationFacade;
+        this.userAuthenticationProvider = userAuthenticationProvider;
     }
 
-    //For tests
-    @GetMapping(value = "/getAll", produces = "application/json")
-    public List<Customer> getCustomers() {
-        return customerOperationFacade.getCustomers();
+    @PostMapping(value = "/login", produces = "application/json")
+    @Operation(summary = "Login user to application")
+    public ResponseEntity<CustomerDto> login(@RequestBody LoginDto loginDto) {
+        CustomerDto customer = customerOperationFacade.login(loginDto);
+        customer.setToken(userAuthenticationProvider.createToken(customer.getLogin()));
+
+        return ResponseEntity.created(URI.create("/users/" + customer.getId())).body(customer);
     }
 
-    @PostMapping(value = "/saveNewCustomer", produces = "application/json")
-    @Operation(summary = "Saving new user to database")
-    public Customer saveNewCustomer(@RequestBody Customer customer) {
-        customerOperationFacade.createNewCustomer(Customer.builder()
-                        .login(customer.getLogin())
-                        .name(customer.getName())
-                        .surname(customer.getSurname())
-                        .password(MD5.getMd5(customer.getPassword()))
-                        .build());
-        return customer;
-    }
+    @PostMapping(value = "/register", produces = "application/json")
+    @Operation(summary = "Register new user to application")
+    public ResponseEntity<CustomerDto> register(@RequestBody SignUpDto signUpDto) {
+        CustomerDto customer = customerOperationFacade.register(signUpDto);
+        customer.setToken(userAuthenticationProvider.createToken(customer.getLogin()));
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody String loginRequest) {
-        System.out.println(loginRequest);
-        //TODO logowanie
-        return ResponseEntity.ok("Zalogowano pomyślnie!");
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody String loginRequest) {
-        System.out.println(loginRequest);
-        //TODO rejestracja
-        return ResponseEntity.ok("Zalogowano pomyślnie!");
+        return ResponseEntity.created(URI.create("/users/" + customer.getId())).body(customer);
     }
 }
