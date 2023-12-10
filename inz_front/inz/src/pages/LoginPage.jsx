@@ -4,6 +4,7 @@ import '../components/style.css';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { request, setAuthHeader } from '../axios_helper';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
   const [login, setLogin] = useState('');
@@ -11,6 +12,8 @@ function LoginPage() {
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [showLoginForm, setShowLoginForm] = useState(true);
+
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -24,6 +27,9 @@ function LoginPage() {
         const token = response.data.token;
         setAuthHeader(token);
         Cookies.set('jwtToken', token);
+        
+        // Po pomyślnym zalogowaniu, przekieruj użytkownika do "/PlannerPage"
+        navigate('/PlannerPage');
       }
     } catch (error) {
       console.error('Error:', error.message);
@@ -102,7 +108,6 @@ function LoginPage() {
                     </div>
                     
                   ) : (
-                    // Formularz rejestracji
                     <div>
                       <div className="form-outline form-white mb-4">
                         <input

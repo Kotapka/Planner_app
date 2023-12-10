@@ -1,5 +1,23 @@
 .gradient-custom {
-    background: #6a11cb;
-    background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
-    background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
-    }
+    background: #4e54c8;
+    background: -webkit-linear-gradient(to right, #8978D9, #573CFA);
+    background: linear-gradient(to right, #8978D9, #573CFA);
+    height: 100vh; /* Set the height to cover the entire viewport */
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Make the row fill the height of its container */
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.text-white {
+    color: #ffffff;
+    opacity: 0.9;
+}
