@@ -1,6 +1,7 @@
 // Importuj odpowiednie pakiety
 import React, { useState } from 'react';
 import styles from './CategoryForm.module.css';
+import Cookies from 'js-cookie';
 
 interface CategoryFormProps {
   onClose: () => void;
@@ -20,13 +21,13 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onClose }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: categoryName }),
+        body: JSON.stringify({ name: categoryName, user: Cookies.get('Login')}),
       });
 
       if (!response.ok) {
         // Jeżeli odpowiedź serwera nie jest OK, obsłuż błąd
         const errorData = await response.json();
-        setError(errorData.message || 'Something went wrong');
+        setError('Something went wrong');
       } else {
         // Jeżeli wszystko poszło pomyślnie, zamknij formularz
         onClose();

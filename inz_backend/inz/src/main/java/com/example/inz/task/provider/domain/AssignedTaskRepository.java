@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AssignedTaskRepository  extends JpaRepository<AssignedTask, Long> {
-
+    @Query("SELECT c FROM Assigned_task c WHERE c.user.id = :userId")
+    List<AssignedTask> getAssignedByUserId(@Param("userId") Long userId);
 }

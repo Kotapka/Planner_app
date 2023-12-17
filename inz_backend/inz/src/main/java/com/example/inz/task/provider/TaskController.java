@@ -2,6 +2,7 @@ package com.example.inz.task.provider;
 
 import com.example.inz.category.dto.CategoryDto;
 import com.example.inz.customer.operation.dto.UserLoginDto;
+import com.example.inz.task.provider.domain.AssignedTask;
 import com.example.inz.task.provider.domain.TaskProviderFacade;
 import com.example.inz.task.provider.dto.AssignedTaskDto;
 import com.example.inz.task.provider.dto.LoginCategoryDto;
@@ -49,4 +50,17 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
 
+    @PostMapping(value = "/saveAssignedTask", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "save assigned task")
+    public ResponseEntity<AssignedTaskDto> saveAssignedTask(@RequestBody AssignedTaskDto task) {
+        AssignedTaskDto assignedTask = taskProviderFacade.saveAssignedTask(task);
+        return ResponseEntity.ok(assignedTask);
+    }
+
+    @PostMapping(value = "/user/getAssignedTask", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "get tasks by user")
+    public ResponseEntity<List<AssignedTaskDto>> getAssignedTask(@RequestBody UserLoginDto user) {
+        List<AssignedTaskDto> assignedTask = taskProviderFacade.getAssignedTaskListByUser(user);
+        return ResponseEntity.ok(assignedTask);
+    }
 }

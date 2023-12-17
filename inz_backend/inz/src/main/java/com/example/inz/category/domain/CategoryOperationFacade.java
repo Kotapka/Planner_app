@@ -26,11 +26,14 @@ public class CategoryOperationFacade {
     }
 
     public CategoryDto saveCategory(CategoryDto categoryDto) {
-        Optional<Category> optionalCategory = categoryRepository.findByName(categoryDto.getName());
 
         Optional<Customer> customerId = customerRepository.findByLogin(categoryDto.getUser());
         if (customerId.isEmpty()) {
             throw new UserNotFoundException("Error with user", HttpStatus.BAD_REQUEST);
+        }
+        Optional<Category> optionalCategory = categoryRepository.findByNameAndUser(customerId.get().getId(), categoryDto.getName());
+        if (optionalCategory.isPresent()) {
+            throw new UserNotFoundException("category for user exist", HttpStatus.BAD_REQUEST);
         }
 
         Category category = Category.builder()
@@ -40,7 +43,7 @@ public class CategoryOperationFacade {
 
         Category savedCategory = categoryRepository.save(category);
 
-        return CategoryDto.builder().id(savedCategory.getId()).name(savedCategory.getName()).build();
+        return CategoryDto.builder().name(savedCategory.getName()).build();
     }
 
     public List<CategoryDto> getCategoryByUser(UserLoginDto user) {
@@ -61,7 +64,6 @@ public class CategoryOperationFacade {
         return CategoryDto.builder()
                .name(category.getName())
                .user(category.getUser().getLogin())
-               .id(category.getId())
                .build();
     }
 }

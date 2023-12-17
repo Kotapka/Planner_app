@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<Task> findByName(String name);
+    @Query("SELECT c FROM Task c WHERE c.user.id = :userId AND c.name = :taskId")
+    Optional<Task> findByNameAndUser(@Param("userId") Long userId,@Param("taskId") String taskId);
 
     @Query("SELECT c FROM Task c WHERE c.user.id = :userId")
     List<Task> getTaskByUserId(@Param("userId") Long userId);

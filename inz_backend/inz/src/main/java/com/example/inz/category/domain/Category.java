@@ -10,7 +10,6 @@ import lombok.*;
 @Data
 @Entity(name = "Category")
 @Table
-@ToString
 public class Category {
     @Id
     @SequenceGenerator(

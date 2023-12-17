@@ -28,7 +28,6 @@ public class AssignedTask {
             generator = "assigned_task_sequence"
     )
     private Long id;
-    private String name;
     private boolean isActive;
     private Date startDate;
     private Date endDate;
@@ -41,4 +40,8 @@ public class AssignedTask {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private Customer user;
+
+    @ManyToOne
+    @JoinColumn(name = "task_id", referencedColumnName = "id")
+    private Task task;
 }

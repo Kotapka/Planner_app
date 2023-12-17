@@ -9,6 +9,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000; /* Ustaw z-index na odpowiednio wysoką wartość, aby formularz był na wierzchu */
   }
   
   .assignedTaskForm {
@@ -17,10 +18,21 @@
     border-radius: 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     color: #fff;
-    width: 300px; /* Dostosuj szerokość formularza według potrzeb */
+    width: 300px;
+    z-index: 1001; /* Ustaw z-index na wartość większą niż dla overlay, aby formularz był na wierzchu */
   }
   
-  .selectField {
+  .selectField,
+  .textareaField {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    resize: vertical; /* Umożliwia pionowe rozszerzanie pola tekstowego */
+  }
+  
+  .inputField {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
@@ -35,7 +47,4 @@
     background-color: #472dc9;
     color: #fff;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
+  }  

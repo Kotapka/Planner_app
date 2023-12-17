@@ -1,16 +1,14 @@
 // PlannerPage.tsx
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import styles from './PlannerPage.module.css'; // Zaimportuj lokalne style
+import styles from './PlannerPage.module.css';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import CategoryForm from '../components/CategoryForm'; // Importuj CategoryForm
-import TaskForm from '../components/TaskForm'; // Importuj TaskForm
+import CategoryForm from '../components/CategoryForm';
+import TaskForm from '../components/TaskForm';
 import AssignedTaskForm from '../components/AssignedTaskForm';
-
 
 const localizer = momentLocalizer(moment);
 
@@ -19,19 +17,64 @@ function PlannerPage() {
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [showAssignedTaskForm, setAssignedShowTaskForm] = useState(false);
+  const [assignedTasks, setAssignedTasks] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
 
+  useEffect(() => {
+    // Load assigned tasks when component mounts
+    loadAssignedTasks();
+  }, []);
+
+  const fetchAssignedTasks = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/user/getAssignedTask', {  
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          login: Cookies.get('Login'),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching assigned tasks:', error.message);
+      // Handle error fetching data
+    }
+  };
+
+  const convertToCalendarEvents = (tasks) => {
+    return tasks.map((task) => ({
+      start: new Date(task.startDate),
+      end: new Date(task.endDate),
+      title: task.task,
+    }));
+  };
+
+  const loadAssignedTasks = async () => {
+    try {
+      const tasks = await fetchAssignedTasks();
+      const calendarEvents = convertToCalendarEvents(tasks);
+      setAssignedTasks(calendarEvents);
+    } catch (error) {
+      // Handle errors
+    }
+  };
 
   const handleLogout = () => {
     try {
       const token = Cookies.get('jwtToken');
-  
-      // Wyślij żądanie do serwera, aby zdezaktywować token (opcjonalne, w zależności od implementacji serwera)
+      // Send a request to the server to deactivate the token (optional, depending on the server implementation)
       // ...
-  
       Cookies.remove('jwtToken');
-      Cookies.remove('logout');
+      Cookies.remove('Logout');
       navigate('/');
-  
     } catch (error) {
       console.error('Error:', error.message);
     }
@@ -40,52 +83,45 @@ function PlannerPage() {
   const handleAddCategoryClick = () => {
     setShowCategoryForm(true);
   };
+
   const handleAddTaskClick = () => {
     setShowTaskForm(true);
   };
 
-
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  // Funkcja obsługująca kliknięcie w dzień kalendarza
   const handleDateClick = (event) => {
-    // Pobierz datę z klikniętego dnia
     const clickedDate = event.start;
-
-    // Ustaw wybraną datę w stanie
     setSelectedDate(clickedDate);
-
-    // Pokaż formularz dodawania zadania
     setAssignedShowTaskForm(true);
   };
 
   return (
     <div className={styles['planner-container']}>
-      {/* Panel boczny zajmujący 15% szerokości strony */}
       <div className={styles['side-panel']}>
-        {/* Tutaj możesz umieścić zawartość panelu bocznego */}
         <h2>PlannerApp</h2>
         <p>Treść panelu bocznego...</p>
         <div className={styles['action-buttons-container']}>
-          <button className={styles['action-button']} onClick={handleAddCategoryClick}>Add Category</button>
-          <button className={styles['action-button']} onClick={handleAddTaskClick}>Add Task</button>
-          <button onClick={handleLogout} className={styles['logout-button']}>Logout</button>
+          <button className={styles['action-button']} onClick={handleAddCategoryClick}>
+            Add Category
+          </button>
+          <button className={styles['action-button']} onClick={handleAddTaskClick}>
+            Add Task
+          </button>
+          <button onClick={handleLogout} className={styles['logout-button']}>
+            Logout
+          </button>
         </div>
       </div>
-
-      {/* Kalendarz zajmujący resztę dostępnej przestrzeni */}
       <div className={`${styles['full-page-calendar']} ${showCategoryForm && styles['calendar-disabled']}`}>
         <Calendar
           localizer={localizer}
           startAccessor="start"
           endAccessor="end"
           style={{ flex: 1, height: '100%' }}
-          selectable={true} // Umożliwia zaznaczanie dni
-          onSelectSlot={handleDateClick} // Obsługa zaznaczenia dnia
+          selectable={true}
+          onSelectSlot={handleDateClick}
+          events={assignedTasks}
         />
       </div>
-
-      {/* Dodaj CategoryForm, jeśli showCategoryForm jest true */}
       {showCategoryForm && <CategoryForm onClose={() => setShowCategoryForm(false)} />}
       {showTaskForm && <TaskForm onClose={() => setShowTaskForm(false)} />}
       {showAssignedTaskForm && selectedDate && (
@@ -93,8 +129,7 @@ function PlannerPage() {
           selectedDate={selectedDate}
           onClose={() => {
             setAssignedShowTaskForm(false);
-            console.log(selectedDate)
-            setSelectedDate(null); // Zresetuj wybraną datę po zamknięciu formularza
+            setSelectedDate(null);
           }}
         />
       )}

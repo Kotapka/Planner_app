@@ -14,19 +14,21 @@ public class TaskProviderFacadeConfiguration {
     TaskRepository taskRepository;
     CategoryRepository categoryRepository;
     CustomerRepository customerRepository;
+    AssignedTaskRepository assignedTaskRepository;
 
     @Autowired
-    TaskProviderFacadeConfiguration(TaskRepository taskRepository, CategoryRepository categoryRepository, CustomerRepository customerRepository) {
+    TaskProviderFacadeConfiguration(TaskRepository taskRepository, CategoryRepository categoryRepository, CustomerRepository customerRepository, AssignedTaskRepository assignedTaskRepository) {
         this.taskRepository = taskRepository;
         this.categoryRepository = categoryRepository;
         this.customerRepository = customerRepository;
+        this.assignedTaskRepository = assignedTaskRepository;
     }
     @Bean
     TaskProviderFacade taskProviderFacade(){
-        return taskProviderFacade(taskRepository, categoryRepository,customerRepository);
+        return taskProviderFacade(taskRepository, categoryRepository,customerRepository,assignedTaskRepository);
     }
 
-    static TaskProviderFacade taskProviderFacade(TaskRepository taskRepository, CategoryRepository categoryRepository, CustomerRepository customerRepository){
-        return new TaskProviderFacade(taskRepository, categoryRepository, customerRepository);
+    static TaskProviderFacade taskProviderFacade(TaskRepository taskRepository, CategoryRepository categoryRepository, CustomerRepository customerRepository,AssignedTaskRepository assignedTaskRepository){
+        return new TaskProviderFacade(taskRepository, categoryRepository, customerRepository, assignedTaskRepository);
     }
 }
