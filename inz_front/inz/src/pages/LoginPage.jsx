@@ -27,7 +27,7 @@ function LoginPage() {
         const token = response.data.token;
         setAuthHeader(token);
         Cookies.set('jwtToken', token);
-        
+        Cookies.set('Login',login)
         // Po pomyślnym zalogowaniu, przekieruj użytkownika do "/PlannerPage"
         navigate('/PlannerPage');
       }
@@ -54,6 +54,7 @@ function LoginPage() {
         const token = response.data.token;
         setAuthHeader(token);
         Cookies.set('jwtToken', token);
+        Cookies.set('Login',login)
       }
     } catch (error) {
       console.error('Error:', error.message);

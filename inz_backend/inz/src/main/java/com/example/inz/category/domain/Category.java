@@ -1,10 +1,8 @@
 package com.example.inz.category.domain;
 
+import com.example.inz.customer.operation.domain.Customer;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,17 +10,21 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity(name = "Category")
 @Table
+@ToString
 public class Category {
     @Id
     @SequenceGenerator(
-            name = "customer_sequence",
-            sequenceName = "customer_sequence",
+            name = "category_sequence",
+            sequenceName = "category_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "customer_sequence"
+            generator = "category_sequence"
     )
     private Long id;
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private Customer user;
 }

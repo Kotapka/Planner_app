@@ -2,21 +2,15 @@ package com.example.inz.category;
 
 import com.example.inz.category.domain.CategoryOperationFacade;
 import com.example.inz.category.dto.CategoryDto;
-import com.example.inz.configuration.UserAuthenticationProvider;
-import com.example.inz.customer.operation.domain.CustomerOperationFacade;
-import com.example.inz.customer.operation.dto.CustomerDto;
-import com.example.inz.customer.operation.dto.LoginDto;
+import com.example.inz.customer.operation.dto.UserLoginDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -34,6 +28,13 @@ public class CategoryController {
     @Operation(summary = "add new category")
     public ResponseEntity<CategoryDto> addCategory(@RequestBody CategoryDto categoryDto) {
         CategoryDto category = categoryOperationFacade.saveCategory(categoryDto);
+        return ResponseEntity.ok(category);
+    }
+
+    @PostMapping(value = "/user/getCategories", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "get category by user")
+    public ResponseEntity<List<CategoryDto>> getCategoryByUser(@RequestBody UserLoginDto user) {
+        List<CategoryDto> category = categoryOperationFacade.getCategoryByUser(user);
         return ResponseEntity.ok(category);
     }
 

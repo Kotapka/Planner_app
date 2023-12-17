@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import CategoryForm from '../components/CategoryForm'; // Importuj CategoryForm
 import TaskForm from '../components/TaskForm'; // Importuj TaskForm
+import AssignedTaskForm from '../components/AssignedTaskForm';
 
 
 const localizer = momentLocalizer(moment);
@@ -17,6 +18,7 @@ function PlannerPage() {
   const navigate = useNavigate();
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
+  const [showAssignedTaskForm, setAssignedShowTaskForm] = useState(false);
 
 
   const handleLogout = () => {
@@ -27,6 +29,7 @@ function PlannerPage() {
       // ...
   
       Cookies.remove('jwtToken');
+      Cookies.remove('logout');
       navigate('/');
   
     } catch (error) {
@@ -39,6 +42,21 @@ function PlannerPage() {
   };
   const handleAddTaskClick = () => {
     setShowTaskForm(true);
+  };
+
+
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  // Funkcja obsługująca kliknięcie w dzień kalendarza
+  const handleDateClick = (event) => {
+    // Pobierz datę z klikniętego dnia
+    const clickedDate = event.start;
+
+    // Ustaw wybraną datę w stanie
+    setSelectedDate(clickedDate);
+
+    // Pokaż formularz dodawania zadania
+    setAssignedShowTaskForm(true);
   };
 
   return (
@@ -57,17 +75,29 @@ function PlannerPage() {
 
       {/* Kalendarz zajmujący resztę dostępnej przestrzeni */}
       <div className={`${styles['full-page-calendar']} ${showCategoryForm && styles['calendar-disabled']}`}>
-      <Calendar
-        localizer={localizer}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ flex: 1, height: '100%' }}
-      />
-    </div>
+        <Calendar
+          localizer={localizer}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ flex: 1, height: '100%' }}
+          selectable={true} // Umożliwia zaznaczanie dni
+          onSelectSlot={handleDateClick} // Obsługa zaznaczenia dnia
+        />
+      </div>
 
       {/* Dodaj CategoryForm, jeśli showCategoryForm jest true */}
       {showCategoryForm && <CategoryForm onClose={() => setShowCategoryForm(false)} />}
       {showTaskForm && <TaskForm onClose={() => setShowTaskForm(false)} />}
+      {showAssignedTaskForm && selectedDate && (
+        <AssignedTaskForm
+          selectedDate={selectedDate}
+          onClose={() => {
+            setAssignedShowTaskForm(false);
+            console.log(selectedDate)
+            setSelectedDate(null); // Zresetuj wybraną datę po zamknięciu formularza
+          }}
+        />
+      )}
     </div>
   );
 }

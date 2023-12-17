@@ -1,4 +1,4 @@
-package com.example.inz.category.dto;
+package com.example.inz.task.provider.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CategoryDto {
-    private Long id;
-    private String name;
-    private String user;
+public class LoginCategoryDto {
+    private String login;
+    private String category;
 }

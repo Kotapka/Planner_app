@@ -1,7 +1,5 @@
 package com.example.inz.category.domain;
 
-import com.example.inz.customer.operation.domain.CustomerMapper;
-import com.example.inz.customer.operation.domain.CustomerOperationFacade;
 import com.example.inz.customer.operation.domain.CustomerRepository;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -14,17 +12,19 @@ import org.springframework.context.annotation.Configuration;
 public class CategoryOperationFacadeConfiguration {
 
     CategoryRepository categoryRepository;
+    CustomerRepository customerRepository;
 
     @Autowired
-    CategoryOperationFacadeConfiguration(CategoryRepository categoryRepository) {
+    CategoryOperationFacadeConfiguration(CategoryRepository categoryRepository, CustomerRepository customerRepository) {
         this.categoryRepository = categoryRepository;
+        this.customerRepository = customerRepository;
     }
     @Bean
     CategoryOperationFacade categoryOperationFacade(){
-        return categoryOperationFacade(categoryRepository);
+        return categoryOperationFacade(categoryRepository,customerRepository);
     }
 
-    static CategoryOperationFacade categoryOperationFacade(CategoryRepository categoryRepository){
-        return new CategoryOperationFacade(categoryRepository);
+    static CategoryOperationFacade categoryOperationFacade(CategoryRepository categoryRepository,CustomerRepository customerRepository){
+        return new CategoryOperationFacade(categoryRepository, customerRepository);
     }
 }
