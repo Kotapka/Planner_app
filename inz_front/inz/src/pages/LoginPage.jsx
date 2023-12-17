@@ -29,6 +29,7 @@ function LoginPage() {
         Cookies.set('jwtToken', token);
         Cookies.set('Login',login)
         // Po pomyślnym zalogowaniu, przekieruj użytkownika do "/PlannerPage"
+        console.log('About to navigate');
         navigate('/PlannerPage');
       }
     } catch (error) {
@@ -55,6 +56,8 @@ function LoginPage() {
         setAuthHeader(token);
         Cookies.set('jwtToken', token);
         Cookies.set('Login',login)
+        console.log('About to navigate');
+        navigate('/PlannerPage');
       }
     } catch (error) {
       console.error('Error:', error.message);

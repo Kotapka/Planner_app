@@ -7,6 +7,7 @@ import com.example.inz.customer.operation.domain.CustomerRepository;
 import com.example.inz.customer.operation.dto.UserLoginDto;
 import com.example.inz.customer.operation.exception.UserNotFoundException;
 import com.example.inz.task.provider.dto.AssignedTaskDto;
+import com.example.inz.task.provider.dto.EditedTaskDto;
 import com.example.inz.task.provider.dto.LoginCategoryDto;
 import com.example.inz.task.provider.dto.TaskDto;
 import lombok.AccessLevel;
@@ -155,6 +156,67 @@ public class TaskProviderFacade {
             .startDate(task.getStartDate())
             .endDate(task.getEndDate())
             .description(task.getDescription())
+            .id(task.getId())
             .build();
+    }
+
+    public AssignedTaskDto deleteAssignedTask(Long assignedTaskDto) {
+        Optional<AssignedTask> task = assignedTaskRepository.findById(assignedTaskDto);
+        if (task.isEmpty()) {
+            throw new UserNotFoundException("Error with task", HttpStatus.BAD_REQUEST);
+        }
+        AssignedTask assignedTask = task.get();
+        assignedTask.setActive(false);
+
+        assignedTaskRepository.save(assignedTask);
+
+        return AssignedTaskDto.builder()
+                .category(assignedTask.getCategory().getName())
+                .task(assignedTask.getTask().getName())
+                .user(assignedTask.getUser().getLogin())
+                .isActive(assignedTask.isActive())
+                .startDate(assignedTask.getStartDate())
+                .endDate(assignedTask.getEndDate())
+                .description(assignedTask.getDescription())
+                .id(assignedTask.getId())
+                .build();
+    }
+
+    public EditedTaskDto editAssignedTask(EditedTaskDto assignedTaskDto) {
+        Optional<AssignedTask> task = assignedTaskRepository.findById(assignedTaskDto.getId());
+        if (task.isEmpty()) {
+            throw new UserNotFoundException("Error with task", HttpStatus.BAD_REQUEST);
+        }
+        Optional<Customer> customerId = customerRepository.findByLogin(assignedTaskDto.getLogin());
+        if (customerId.isEmpty()) {
+            throw new UserNotFoundException("Error with user", HttpStatus.BAD_REQUEST);
+        }
+        Optional<Category> categoryId = categoryRepository.findByNameAndUser(customerId.get().getId(), assignedTaskDto.getCategory());
+        if (categoryId.isEmpty()) {
+            throw new UserNotFoundException("Error with category", HttpStatus.BAD_REQUEST);
+        }
+        Optional<Task> taskId = taskRepository.findByNameAndUser(customerId.get().getId(), assignedTaskDto.getTask());
+        if (taskId.isEmpty()) {
+            throw new UserNotFoundException("Error with task", HttpStatus.BAD_REQUEST);
+        }
+
+
+        AssignedTask assignedTask = task.get();
+        assignedTask.setCategory(categoryId.get());
+        assignedTask.setTask(taskId.get());
+        assignedTask.setEndDate(assignedTaskDto.getEndDate());
+        assignedTask.setStartDate(assignedTaskDto.getStartDate());
+        assignedTask.setDescription(assignedTaskDto.getDescription());
+
+        assignedTaskRepository.save(assignedTask);
+
+        return EditedTaskDto.builder()
+                .category(assignedTask.getCategory().getName())
+                .task(assignedTask.getTask().getName())
+                .startDate(assignedTask.getStartDate())
+                .endDate(assignedTask.getEndDate())
+                .description(assignedTask.getDescription())
+                .id(assignedTask.getId())
+                .build();
     }
 }

@@ -31,6 +31,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onClose }) => {
       } else {
         // Jeżeli wszystko poszło pomyślnie, zamknij formularz
         onClose();
+        window.location.reload()
       }
     } catch (error) {
       // Obsługa błędów sieciowych lub innych nieoczekiwanych błędów

@@ -5,6 +5,7 @@ import com.example.inz.customer.operation.dto.UserLoginDto;
 import com.example.inz.task.provider.domain.AssignedTask;
 import com.example.inz.task.provider.domain.TaskProviderFacade;
 import com.example.inz.task.provider.dto.AssignedTaskDto;
+import com.example.inz.task.provider.dto.EditedTaskDto;
 import com.example.inz.task.provider.dto.LoginCategoryDto;
 import com.example.inz.task.provider.dto.TaskDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,6 +62,20 @@ public class TaskController {
     @Operation(summary = "get tasks by user")
     public ResponseEntity<List<AssignedTaskDto>> getAssignedTask(@RequestBody UserLoginDto user) {
         List<AssignedTaskDto> assignedTask = taskProviderFacade.getAssignedTaskListByUser(user);
+        return ResponseEntity.ok(assignedTask);
+    }
+
+    @PostMapping(value = "/deleteAssignedTask", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "delete assigned tasks")
+    public ResponseEntity<AssignedTaskDto> deleteAssignedTask(@RequestBody Long assignedTaskDto) {
+        AssignedTaskDto assignedTask = taskProviderFacade.deleteAssignedTask(assignedTaskDto);
+        return ResponseEntity.ok(assignedTask);
+    }
+
+    @PostMapping(value = "/editAssignedTask", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "delete assigned tasks")
+    public ResponseEntity<EditedTaskDto> editAssignedTask(@RequestBody EditedTaskDto assignedTaskDto) {
+        EditedTaskDto assignedTask = taskProviderFacade.editAssignedTask(assignedTaskDto);
         return ResponseEntity.ok(assignedTask);
     }
 }

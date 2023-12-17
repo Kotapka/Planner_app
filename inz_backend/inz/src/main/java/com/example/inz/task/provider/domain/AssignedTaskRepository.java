@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface AssignedTaskRepository  extends JpaRepository<AssignedTask, Long> {
     @Query("SELECT c FROM Assigned_task c WHERE c.user.id = :userId")
     List<AssignedTask> getAssignedByUserId(@Param("userId") Long userId);
+
+    Optional<AssignedTask> findById(Long id);
 }

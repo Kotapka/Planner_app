@@ -143,8 +143,8 @@ const AssignedTaskForm: React.FC<AssignedTaskFormProps> = ({ selectedDate, onClo
     } catch (error) {
       console.error('Error: Failed to save assigned task',error);
     }
-
     onClose();
+    window.location.reload()
   };
 
   return (
