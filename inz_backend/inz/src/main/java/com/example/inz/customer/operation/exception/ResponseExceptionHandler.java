@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 public class ResponseExceptionHandler {
 
-    @ExceptionHandler(value = {UserNotFoundException.class})
+    @ExceptionHandler(value = {HttpException.class})
     @ResponseBody
-    public ResponseEntity<ErrorDto> handlerException(UserNotFoundException e) {
+    public ResponseEntity<ErrorDto> handlerException(HttpException e) {
         return ResponseEntity.status(e.getCode())
                 .body(ErrorDto.builder().message(e.getMessage()).build());
     }

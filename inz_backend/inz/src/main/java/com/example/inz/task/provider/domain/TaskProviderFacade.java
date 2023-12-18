@@ -5,7 +5,7 @@ import com.example.inz.category.domain.CategoryRepository;
 import com.example.inz.customer.operation.domain.Customer;
 import com.example.inz.customer.operation.domain.CustomerRepository;
 import com.example.inz.customer.operation.dto.UserLoginDto;
-import com.example.inz.customer.operation.exception.UserNotFoundException;
+import com.example.inz.customer.operation.exception.HttpException;
 import com.example.inz.task.provider.dto.AssignedTaskDto;
 import com.example.inz.task.provider.dto.EditedTaskDto;
 import com.example.inz.task.provider.dto.LoginCategoryDto;
@@ -38,15 +38,15 @@ public class TaskProviderFacade {
     public TaskDto saveTask(TaskDto taskDto) {
         Optional<Customer> customerId = customerRepository.findByLogin(taskDto.getUser());
         if (customerId.isEmpty()) {
-            throw new UserNotFoundException("Error with user", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with user", HttpStatus.BAD_REQUEST);
         }
         Optional<Category> categoryId = categoryRepository.findByNameAndUser(customerId.get().getId(),taskDto.getCategory());
         if (categoryId.isEmpty()) {
-            throw new UserNotFoundException("Error with category", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with category", HttpStatus.BAD_REQUEST);
         }
-        Optional<Task> doesTaskExist = taskRepository.findByNameAndUser(customerId.get().getId(),taskDto.getName());
+        Optional<Task> doesTaskExist = taskRepository.findByNameAndUserAndCategory(customerId.get().getId(),taskDto.getName(),categoryId.get().getId());
         if (doesTaskExist.isPresent()) {
-            throw new UserNotFoundException("Task already exists", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Task already exists", HttpStatus.BAD_REQUEST);
         }
         Task savedTask = taskRepository.save(Task.builder()
                 .name(taskDto.getName())
@@ -61,7 +61,7 @@ public class TaskProviderFacade {
     public List<TaskDto> getTaskByUser(UserLoginDto user) {
         Optional<Customer> customerId = customerRepository.findByLogin(user.getLogin());
         if (customerId.isEmpty()) {
-            throw new UserNotFoundException("Error with user", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with user", HttpStatus.BAD_REQUEST);
         }
         List<Task> category = taskRepository.getTaskByUserId(customerId.get().getId());
 
@@ -74,11 +74,11 @@ public class TaskProviderFacade {
     public List<TaskDto> getTaskByUserAndCategory(LoginCategoryDto user) {
         Optional<Customer> customerId = customerRepository.findByLogin(user.getLogin());
         if (customerId.isEmpty()) {
-            throw new UserNotFoundException("Error with user", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with user", HttpStatus.BAD_REQUEST);
         }
         Optional<Category> category = categoryRepository.findByName(user.getCategory());
         if (category.isEmpty()) {
-            throw new UserNotFoundException("Error with user", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with user", HttpStatus.BAD_REQUEST);
         }
 
         List<Task> tasks = taskRepository.getTaskByUserIdAndCategory(customerId.get().getId(),category.get().getId());
@@ -100,16 +100,25 @@ public class TaskProviderFacade {
     public AssignedTaskDto saveAssignedTask(AssignedTaskDto task) {
         Optional<Customer> customerId = customerRepository.findByLogin(task.getUser());
         if (customerId.isEmpty()) {
-            throw new UserNotFoundException("Error with user", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with user", HttpStatus.BAD_REQUEST);
         }
         Optional<Category> categoryId = categoryRepository.findByNameAndUser(customerId.get().getId(),task.getCategory());
         if (categoryId.isEmpty()) {
-            throw new UserNotFoundException("Error with category", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with category", HttpStatus.BAD_REQUEST);
         }
         Optional<Task> optionalTask = taskRepository.findByNameAndUser(customerId.get().getId(),task.getTask());
         if (optionalTask.isEmpty()) {
-            throw new UserNotFoundException("Task doesn't exists", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Task doesn't exists", HttpStatus.BAD_REQUEST);
         }
+        if(!task.getStartDate().before(task.getEndDate())){
+            throw new HttpException("Date error", HttpStatus.BAD_REQUEST);
+        }
+        long diffMillis = Math.abs(task.getStartDate().getTime() - task.getEndDate().getTime());
+        long diffHours = diffMillis / (60 * 60 * 1000);
+        if(diffHours > 24){
+            throw new HttpException("Date too long", HttpStatus.BAD_REQUEST);
+        }
+
 
         AssignedTask savedAssignedTask = assignedTaskRepository.save(AssignedTask.builder()
                 .category(categoryId.get())
@@ -135,7 +144,7 @@ public class TaskProviderFacade {
     public List<AssignedTaskDto> getAssignedTaskListByUser(UserLoginDto user) {
         Optional<Customer> customerId = customerRepository.findByLogin(user.getLogin());
         if (customerId.isEmpty()) {
-            throw new UserNotFoundException("Error with user", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with user", HttpStatus.BAD_REQUEST);
         }
 
         List<AssignedTask> tasks = assignedTaskRepository.getAssignedByUserId(customerId.get().getId());
@@ -163,7 +172,7 @@ public class TaskProviderFacade {
     public AssignedTaskDto deleteAssignedTask(Long assignedTaskDto) {
         Optional<AssignedTask> task = assignedTaskRepository.findById(assignedTaskDto);
         if (task.isEmpty()) {
-            throw new UserNotFoundException("Error with task", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with task", HttpStatus.BAD_REQUEST);
         }
         AssignedTask assignedTask = task.get();
         assignedTask.setActive(false);
@@ -185,19 +194,19 @@ public class TaskProviderFacade {
     public EditedTaskDto editAssignedTask(EditedTaskDto assignedTaskDto) {
         Optional<AssignedTask> task = assignedTaskRepository.findById(assignedTaskDto.getId());
         if (task.isEmpty()) {
-            throw new UserNotFoundException("Error with task", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with task", HttpStatus.BAD_REQUEST);
         }
         Optional<Customer> customerId = customerRepository.findByLogin(assignedTaskDto.getLogin());
         if (customerId.isEmpty()) {
-            throw new UserNotFoundException("Error with user", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with user", HttpStatus.BAD_REQUEST);
         }
         Optional<Category> categoryId = categoryRepository.findByNameAndUser(customerId.get().getId(), assignedTaskDto.getCategory());
         if (categoryId.isEmpty()) {
-            throw new UserNotFoundException("Error with category", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with category", HttpStatus.BAD_REQUEST);
         }
         Optional<Task> taskId = taskRepository.findByNameAndUser(customerId.get().getId(), assignedTaskDto.getTask());
         if (taskId.isEmpty()) {
-            throw new UserNotFoundException("Error with task", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with task", HttpStatus.BAD_REQUEST);
         }
 
 

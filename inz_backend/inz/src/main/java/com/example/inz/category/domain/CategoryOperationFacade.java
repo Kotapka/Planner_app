@@ -4,13 +4,14 @@ import com.example.inz.category.dto.CategoryDto;
 import com.example.inz.customer.operation.dto.UserLoginDto;
 import com.example.inz.customer.operation.domain.Customer;
 import com.example.inz.customer.operation.domain.CustomerRepository;
-import com.example.inz.customer.operation.exception.UserNotFoundException;
+import com.example.inz.customer.operation.exception.HttpException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -26,14 +27,16 @@ public class CategoryOperationFacade {
     }
 
     public CategoryDto saveCategory(CategoryDto categoryDto) {
-
+        if((Objects.equals(categoryDto.getUser(), "") || Objects.equals(categoryDto.getName(), ""))){
+            throw new HttpException("InvalidDataException", HttpStatus.BAD_REQUEST);
+        }
         Optional<Customer> customerId = customerRepository.findByLogin(categoryDto.getUser());
         if (customerId.isEmpty()) {
-            throw new UserNotFoundException("Error with user", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with user", HttpStatus.BAD_REQUEST);
         }
         Optional<Category> optionalCategory = categoryRepository.findByNameAndUser(customerId.get().getId(), categoryDto.getName());
         if (optionalCategory.isPresent()) {
-            throw new UserNotFoundException("category for user exist", HttpStatus.BAD_REQUEST);
+            throw new HttpException("category for user exist", HttpStatus.BAD_REQUEST);
         }
 
         Category category = Category.builder()
@@ -49,7 +52,7 @@ public class CategoryOperationFacade {
     public List<CategoryDto> getCategoryByUser(UserLoginDto user) {
         Optional<Customer> customerId = customerRepository.findByLogin(user.getLogin());
         if (customerId.isEmpty()) {
-            throw new UserNotFoundException("Error with user", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Error with user", HttpStatus.BAD_REQUEST);
         }
         List<Category> category = categoryRepository.getCategoriesByUserId(customerId.get().getId());
 

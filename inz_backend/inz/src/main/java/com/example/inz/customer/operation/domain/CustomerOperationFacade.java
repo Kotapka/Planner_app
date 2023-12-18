@@ -3,7 +3,7 @@ package com.example.inz.customer.operation.domain;
 import com.example.inz.customer.operation.dto.CustomerDto;
 import com.example.inz.customer.operation.dto.LoginDto;
 import com.example.inz.customer.operation.dto.SignUpDto;
-import com.example.inz.customer.operation.exception.UserNotFoundException;
+import com.example.inz.customer.operation.exception.HttpException;
 import com.example.inz.operations.MD5;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -24,25 +24,25 @@ public class CustomerOperationFacade {
         this.customerMapper = customerMapper;
     }
     public CustomerDto findByLogin(String login){
-        Customer customer = customerRepository.findByLogin(login).orElseThrow(() -> new UserNotFoundException("User not found", HttpStatus.NOT_FOUND));
+        Customer customer = customerRepository.findByLogin(login).orElseThrow(() -> new HttpException("User not found", HttpStatus.NOT_FOUND));
         return customerMapper.toCustomerDto(customer);
     }
 
     public CustomerDto login(LoginDto login) {
         Customer customer = customerRepository.findByLogin(login.getLogin())
-                .orElseThrow(() -> new UserNotFoundException("Unknown user", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new HttpException("Unknown user", HttpStatus.NOT_FOUND));
 
         if (customer.getPassword().equals(MD5.getMd5(login.getPassword()))) {
             return customerMapper.toCustomerDto(customer);
         }
-        throw new UserNotFoundException("Invalid password", HttpStatus.BAD_REQUEST);
+        throw new HttpException("Invalid password", HttpStatus.BAD_REQUEST);
     }
 
     public CustomerDto register(SignUpDto userDto) {
         Optional<Customer> optionalUser = customerRepository.findByLogin(userDto.getLogin());
 
         if (optionalUser.isPresent()) {
-            throw new UserNotFoundException("Login already exists", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Login already exists", HttpStatus.BAD_REQUEST);
         }
 
         Customer customer = customerMapper.signUpToUser(userDto);
