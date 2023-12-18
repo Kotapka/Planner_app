@@ -106,17 +106,6 @@ const AssignedTaskForm: React.FC<AssignedTaskFormProps> = ({ selectedDate, onClo
     const startDateTime = (`${formattedStartDate}T${startDate}:00.000Z`);
     const endDateTime = (`${formattedStartDate}T${endDate}:00.000Z`);
 
-    
-    // if (!startDateTime || !endDateTime || isNaN(startDateTime.getTime()) || isNaN(endDateTime.getTime())) {
-    //   setError(startDateTime + " !!! " + startDate );
-    //   return;
-    // }
-
-    // if (startDateTime.getTime() > endDateTime.getTime()) {
-    //   setError('Data rozpoczęcia nie może być późniejsza niż data zakończenia.');
-    //   return;
-    // }
-
     try {
       const response = await fetch('http://localhost:8080/api/saveAssignedTask', {
         method: 'POST',

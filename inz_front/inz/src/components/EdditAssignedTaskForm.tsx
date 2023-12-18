@@ -1,5 +1,5 @@
 // EditAssignedTaskForm.tsx
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import styles from './EditAssignedTaskForm.module.css';
 import Cookies from 'js-cookie';
 
@@ -15,10 +15,12 @@ interface TaskUpdateData {
 
 interface EditAssignedTaskFormProps {
   onClose: () => void;
+  onUpdate: (updatedData: TaskUpdateData) => void;
   taskId: number;
+  selectedDate: string;
 }
 
-const EditAssignedTaskForm: React.FC<EditAssignedTaskFormProps> = ({ onClose, taskId }) => {
+const EditAssignedTaskForm: React.FC<EditAssignedTaskFormProps> = ({ onClose,taskId,selectedDate }) => {
   const [error, setError] = useState<string>('');
   const [editedStartDate, setEditedStartDate] = useState<string>('');
   const [editedEndDate, setEditedEndDate] = useState<string>('');
@@ -26,18 +28,30 @@ const EditAssignedTaskForm: React.FC<EditAssignedTaskFormProps> = ({ onClose, ta
   const [editedCategory, setEditedCategory] = useState<string>('');
   const [editedTask, setEditedTask] = useState<string>('');
 
+  useEffect(() => {
+
+  }, [selectedDate]);
 
   const handleUpdate = async () => {
+
+    let newStartDate = new Date(selectedDate)
+    let year = newStartDate.getFullYear();
+    let month = String(newStartDate.getMonth() + 1).padStart(2, '0');
+    let day = String(newStartDate.getDate()).padStart(2, '0');
+    let formattedStartDate = `${year}-${month}-${day}`;
+
+    const startDateTime = (`${formattedStartDate}T${editedStartDate}:00.000Z`);
+    const endDateTime = (`${formattedStartDate}T${editedEndDate}:00.000Z`);
+
     const updatedData: TaskUpdateData = {
       id: taskId,
-      startDate: editedStartDate,
-      endDate: editedEndDate,
+      startDate: startDateTime,
+      endDate: endDateTime,
       description: editedDescription,
       category: editedCategory,
       task: editedTask,
       login: Cookies.get('Login')
     };
-    console.log(updatedData)
     try {
       const response = await fetch('http://localhost:8080/api/editAssignedTask', {
         method: 'POST',

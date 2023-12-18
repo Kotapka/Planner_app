@@ -138,6 +138,7 @@ function PlannerPage() {
   const handleEventClick = (event) => {
     setShowEdditAssignedTaskForm(true);
     setSelectedTaskId(event.id);
+    setSelectedDate(event.start)
   };
 
   return (
@@ -145,14 +146,32 @@ function PlannerPage() {
       <div className={styles['side-panel']}>
         <h2>PlannerApp</h2>
         <div>
-          <ul>
-            {tasksAndCategories.map((item, index) => (
-              <li key={index}>
-                Task: {item.name}, Category: {item.category}
-              </li>
-            ))}
-          </ul>
+    {tasksAndCategories.reduce((categories, task) => {
+      const existingCategory = categories.find((cat) => cat.name === task.category);
+
+      if (existingCategory) {
+        existingCategory.tasks.push(task.name);
+      } else {
+        categories.push({
+          name: task.category,
+          tasks: [task.name],
+        });
+      }
+
+      return categories;
+    }, []).map((category, index) => (
+      <React.Fragment key={index}>
+        <div>
+          <strong>Category: {category.name}</strong>
         </div>
+        <ul>
+          {category.tasks.map((task, taskIndex) => (
+            <li key={taskIndex}>- {task}</li>
+          ))}
+        </ul>
+      </React.Fragment>
+    ))}
+  </div>
         <div className={styles['action-buttons-container']}>
           <button className={styles['action-button']} onClick={handleAddCategoryClick}>
             Add Category
@@ -179,7 +198,7 @@ function PlannerPage() {
       </div>
       {showCategoryForm && <CategoryForm onClose={() => setShowCategoryForm(false)} />}
       {showTaskForm && <TaskForm onClose={() => setShowTaskForm(false)} />}
-      {showEdditAssignedTaskForm && <EditAssignedTaskForm taskId={selectedTaskId} onClose={() => setShowEdditAssignedTaskForm(false)} />}
+      {showEdditAssignedTaskForm && <EditAssignedTaskForm taskId={selectedTaskId} selectedDate={selectedDate} onClose={() => setShowEdditAssignedTaskForm(false)} />}
       {showAssignedTaskForm && selectedDate && (
         <AssignedTaskForm
           selectedDate={selectedDate}
