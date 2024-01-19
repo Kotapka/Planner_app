@@ -1,0 +1,42 @@
+/* Statistics.module.css */
+
+.statistics-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.side-panel {
+  width: 15%;
+  height: 100vh;
+  padding: 20px;
+  background-color: #583BE1;
+  border-radius: 0px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #ffffff;
+  position: fixed; /* Stałe pozycjonowanie */
+  top: 0; /* Ustawienie na górze */
+}
+
+.action-buttons-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.logout-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #472dc9;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.data-grid-container {
+  margin-left: 15%; /* Dostosowanie marginesu po lewej stronie */
+  width: 85%; /* Ustawienie szerokości tabeli na resztę dostępnego miejsca */
+}

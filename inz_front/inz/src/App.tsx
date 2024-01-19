@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import PlannerPage from './pages/PlannerPage';
 import LoginPage from './pages/LoginPage';
 import Cookies from 'js-cookie';
+import Statistics from './pages/Statistics'
 
 const isAuthenticated = () => {
   const jwtToken = Cookies.get('jwtToken');
@@ -19,6 +20,7 @@ function App() {
           path="/PlannerPage"
           element={isAuthenticated() ? <PlannerPage /> : <Navigate to="/" />}
         />
+        <Route path="/Statistics" element={isAuthenticated() ? <Statistics /> : <Navigate to="/" />} />
     </Routes  >
   </Router>
   );

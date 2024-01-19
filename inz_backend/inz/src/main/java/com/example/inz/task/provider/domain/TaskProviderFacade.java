@@ -6,6 +6,8 @@ import com.example.inz.customer.operation.domain.Customer;
 import com.example.inz.customer.operation.domain.CustomerRepository;
 import com.example.inz.customer.operation.dto.UserLoginDto;
 import com.example.inz.customer.operation.exception.HttpException;
+import com.example.inz.statistics.dto.StatisticsDto;
+import com.example.inz.statistics.dto.StatisticsTaskDto;
 import com.example.inz.task.provider.dto.AssignedTaskDto;
 import com.example.inz.task.provider.dto.EditedTaskDto;
 import com.example.inz.task.provider.dto.LoginCategoryDto;
@@ -15,8 +17,12 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
+import java.time.Duration;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TaskProviderFacade {
@@ -103,13 +109,13 @@ public class TaskProviderFacade {
             throw new HttpException("Error with user", HttpStatus.BAD_REQUEST);
         }
         Optional<Category> categoryId = categoryRepository.findByNameAndUser(customerId.get().getId(),task.getCategory());
-        if (categoryId.isEmpty()) {
-            throw new HttpException("Error with category", HttpStatus.BAD_REQUEST);
-        }
-        Optional<Task> optionalTask = taskRepository.findByNameAndUser(customerId.get().getId(),task.getTask());
-        if (optionalTask.isEmpty()) {
-            throw new HttpException("Task doesn't exists", HttpStatus.BAD_REQUEST);
-        }
+//        if (categoryId.isEmpty()) {
+//            throw new HttpException("Error with category", HttpStatus.BAD_REQUEST);
+//        }
+        Optional<Task> optionalTask = taskRepository.findByNameAndUserAndCategory(customerId.get().getId(),task.getTask(),categoryId.get().getId());
+//        if (optionalTask.isEmpty()) {
+//            throw new HttpException("Task doesn't exists", HttpStatus.BAD_REQUEST);
+//        }
         if(!task.getStartDate().before(task.getEndDate())){
             throw new HttpException("Date error", HttpStatus.BAD_REQUEST);
         }
@@ -227,5 +233,55 @@ public class TaskProviderFacade {
                 .description(assignedTask.getDescription())
                 .id(assignedTask.getId())
                 .build();
+    }
+
+    public List<StatisticsTaskDto> getStatistics(StatisticsDto statisticsDto) {
+        Optional<Customer> customerId = customerRepository.findByLogin(statisticsDto.getUser());
+        if (customerId.isEmpty()) {
+            throw new HttpException("Error with user", HttpStatus.BAD_REQUEST);
+        }
+
+        List<AssignedTask> tasks = assignedTaskRepository.getAssignedByUserId(customerId.get().getId());
+
+        return generateStatistics(statisticsDto.getStartDate(), statisticsDto.getEndDate(), tasks);
+    }
+
+    private List<StatisticsTaskDto> generateStatistics(Date startDate, Date endDate, List<AssignedTask> tasks) {
+        Map<String, List<AssignedTask>> groupedTasks = tasks.stream()
+                .filter(task -> task.isActive() && isTaskWithinDateRange(task, startDate, endDate))
+                .collect(Collectors.groupingBy(
+                        task -> task.getCategory().getName() + task.getTask().getName()
+                ));
+
+        return groupedTasks.values().stream()
+                .map(this::mergeTasks)
+                .collect(Collectors.toList());
+    }
+
+    private boolean isTaskWithinDateRange(AssignedTask task, Date startDate, Date endDate) {
+        Date taskStartDate = task.getStartDate();
+        return taskStartDate != null && !taskStartDate.before(startDate) && !taskStartDate.after(endDate);
+    }
+
+    private StatisticsTaskDto mergeTasks(List<AssignedTask> tasksWithSameCategoryAndTask) {
+        Duration totalDuration = tasksWithSameCategoryAndTask.stream()
+                .map(task -> calculateTaskDuration(task.getStartDate(), task.getEndDate()))
+                .reduce(Duration.ZERO, Duration::plus);
+
+        AssignedTask sampleTask = tasksWithSameCategoryAndTask.get(0); // We assume at least one task in the list
+
+        return StatisticsTaskDto.builder()
+                .category(sampleTask.getCategory().getName())
+                .task(sampleTask.getTask().getName())
+                .duration((int) totalDuration.toMinutes())
+                .build();
+    }
+
+    private Duration calculateTaskDuration(Date startDate, Date endDate) {
+        if (startDate != null && endDate != null) {
+            return Duration.between(startDate.toInstant(), endDate.toInstant());
+        } else {
+            return Duration.ZERO;
+        }
     }
 }

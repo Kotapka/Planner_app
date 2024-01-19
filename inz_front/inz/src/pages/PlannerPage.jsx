@@ -141,6 +141,15 @@ function PlannerPage() {
     setSelectedDate(event.start)
   };
 
+  const handleStatisticsPage = () => {
+    try{
+    console.log('Navigating to Statistics');
+    navigate('/Statistics');
+    } catch(error) {
+      console.error(error.message);
+    }
+  };
+
   return (
     <div className={styles['planner-container']}>
       <div className={styles['side-panel']}>
@@ -178,6 +187,9 @@ function PlannerPage() {
           </button>
           <button className={styles['action-button']} onClick={handleAddTaskClick}>
             Add Task
+          </button>
+          <button onClick={handleStatisticsPage} className={styles['action-button']}>
+            Statistics
           </button>
           <button onClick={handleLogout} className={styles['logout-button']}>
             Logout
