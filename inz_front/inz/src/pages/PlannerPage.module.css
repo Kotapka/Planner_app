@@ -29,7 +29,6 @@
     pointer-events: none;
   }
 
-/* PlannerPage.module.css */
 .planner-container {
   display: flex;
   min-height: 100vh;
@@ -45,7 +44,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Ustawienie odstępu między górną a dolną krawędzią kontenera */
+  justify-content: space-between; 
 }
 
 .action-buttons-container {

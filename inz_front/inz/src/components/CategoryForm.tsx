@@ -1,4 +1,3 @@
-// Importuj odpowiednie pakiety
 import React, { useState } from 'react';
 import styles from './CategoryForm.module.css';
 import Cookies from 'js-cookie';
@@ -15,7 +14,6 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onClose }) => {
     e.preventDefault();
 
     try {
-      // Wysyłanie żądania do serwera
       const response = await fetch('http://localhost:8080/api/addCategory', {
         method: 'POST',
         headers: {
@@ -25,16 +23,13 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onClose }) => {
       });
 
       if (!response.ok) {
-        // Jeżeli odpowiedź serwera nie jest OK, obsłuż błąd
         const errorData = await response.json();
         setError('Something went wrong');
       } else {
-        // Jeżeli wszystko poszło pomyślnie, zamknij formularz
         onClose();
         window.location.reload()
       }
     } catch (error) {
-      // Obsługa błędów sieciowych lub innych nieoczekiwanych błędów
       setError('Something went wrong');
     }
   };

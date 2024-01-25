@@ -1,4 +1,3 @@
-// EditAssignedTaskForm.tsx
 import React, { useState,useEffect } from 'react';
 import styles from './EditAssignedTaskForm.module.css';
 import Cookies from 'js-cookie';
@@ -62,7 +61,6 @@ const EditAssignedTaskForm: React.FC<EditAssignedTaskFormProps> = ({ onClose,tas
       });
 
       if (response.ok) {
-        // Dodatkowe działania po pomyślnym zapisie
         console.log('Task updated successfully');
         onClose();
         window.location.reload();

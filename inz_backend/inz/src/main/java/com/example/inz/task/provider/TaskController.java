@@ -1,8 +1,6 @@
 package com.example.inz.task.provider;
 
-import com.example.inz.category.dto.CategoryDto;
 import com.example.inz.customer.operation.dto.UserLoginDto;
-import com.example.inz.task.provider.domain.AssignedTask;
 import com.example.inz.task.provider.domain.TaskProviderFacade;
 import com.example.inz.task.provider.dto.AssignedTaskDto;
 import com.example.inz.task.provider.dto.EditedTaskDto;

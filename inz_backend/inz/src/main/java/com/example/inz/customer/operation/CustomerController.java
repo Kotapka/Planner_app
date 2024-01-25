@@ -1,13 +1,10 @@
 package com.example.inz.customer.operation;
 
 import com.example.inz.configuration.UserAuthenticationProvider;
-import com.example.inz.customer.operation.domain.Customer;
 import com.example.inz.customer.operation.domain.CustomerOperationFacade;
 import com.example.inz.customer.operation.dto.CustomerDto;
 import com.example.inz.customer.operation.dto.LoginDto;
 import com.example.inz.customer.operation.dto.SignUpDto;
-import com.example.inz.customer.operation.exception.InvalidDataException;
-import com.example.inz.operations.MD5;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

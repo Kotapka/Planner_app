@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.inz.customer.operation.domain.Customer;
 import com.example.inz.customer.operation.domain.CustomerOperationFacade;
 import com.example.inz.customer.operation.dto.CustomerDto;
 import jakarta.annotation.PostConstruct;

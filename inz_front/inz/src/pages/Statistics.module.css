@@ -1,5 +1,3 @@
-/* Statistics.module.css */
-
 .statistics-container {
   display: flex;
   min-height: 100vh;
@@ -16,8 +14,8 @@
   flex-direction: column;
   justify-content: space-between;
   color: #ffffff;
-  position: fixed; /* Stałe pozycjonowanie */
-  top: 0; /* Ustawienie na górze */
+  position: fixed; 
+  top: 0; 
 }
 
 .action-buttons-container {
@@ -37,6 +35,6 @@
 }
 
 .data-grid-container {
-  margin-left: 15%; /* Dostosowanie marginesu po lewej stronie */
-  width: 85%; /* Ustawienie szerokości tabeli na resztę dostępnego miejsca */
+  margin-left: 15%; 
+  width: 85%; 
 }

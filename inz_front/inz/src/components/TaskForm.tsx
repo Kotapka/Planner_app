@@ -1,4 +1,3 @@
-// TaskForm.tsx
 import React, { useState, useEffect } from 'react';
 import styles from './TaskForm.module.css';
 import Cookies from 'js-cookie';
@@ -37,10 +36,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onClose }) => {
           const data = await response.json();
           setCategories(data);
   
-          // Sprawdź, czy aktualnie wybrana kategoria istnieje w nowych danych
           const isCurrentCategoryValid = data.some((category: Category) => category.name === selectedCategory);
   
-          // Jeśli nie, ustaw pierwszą dostępną kategorię jako nową wybraną kategorię
           if (!isCurrentCategoryValid && data.length > 0) {
             setSelectedCategory(data[0].name);
           }

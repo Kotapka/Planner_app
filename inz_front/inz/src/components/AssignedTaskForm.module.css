@@ -1,4 +1,3 @@
-/* AssignedTaskForm.module.css */
 .overlay {
     position: fixed;
     top: 0;
@@ -9,7 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Ustaw z-index na odpowiednio wysoką wartość, aby formularz był na wierzchu */
+    z-index: 1000; 
   }
   
   .assignedTaskForm {
@@ -19,7 +18,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     color: #fff;
     width: 300px;
-    z-index: 1001; /* Ustaw z-index na wartość większą niż dla overlay, aby formularz był na wierzchu */
+    z-index: 1001;
   }
   
   .selectField,
@@ -29,7 +28,7 @@
     margin: 10px 0;
     border: none;
     border-radius: 5px;
-    resize: vertical; /* Umożliwia pionowe rozszerzanie pola tekstowego */
+    resize: vertical;
   }
   
   .inputField {

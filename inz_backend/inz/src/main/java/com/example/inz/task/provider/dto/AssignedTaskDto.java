@@ -1,10 +1,5 @@
 package com.example.inz.task.provider.dto;
 
-import com.example.inz.category.domain.Category;
-import com.example.inz.customer.operation.domain.Customer;
-import com.example.inz.task.provider.domain.Task;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

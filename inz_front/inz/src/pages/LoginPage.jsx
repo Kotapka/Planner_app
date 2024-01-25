@@ -28,7 +28,6 @@ function LoginPage() {
         setAuthHeader(token);
         Cookies.set('jwtToken', token);
         Cookies.set('Login',login)
-        // Po pomyślnym zalogowaniu, przekieruj użytkownika do "/PlannerPage"
         console.log('About to navigate');
         navigate('/PlannerPage');
       }
@@ -77,7 +76,6 @@ function LoginPage() {
                     {showLoginForm ? 'Please enter your login and password!' : 'Create an account!'}
                   </p>
                   {showLoginForm ? (
-                    // Formularz logowania
                     <div>
                       <div className="form-outline form-white mb-4">
                         <input

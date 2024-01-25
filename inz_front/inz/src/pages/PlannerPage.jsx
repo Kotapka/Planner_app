@@ -1,4 +1,3 @@
-// PlannerPage.tsx
 import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -25,7 +24,6 @@ function PlannerPage() {
   const [tasksAndCategories, setTasksAndCategories] = useState([]);
 
   useEffect(() => {
-    // Load assigned tasks and categories when the component mounts
     loadAssignedTasks();
     loadTasksAndCategories();
   }, []);
@@ -51,7 +49,6 @@ function PlannerPage() {
       return data;
     } catch (error) {
       console.error('Error fetching assigned tasks:', error.message);
-      // Handle error fetching data
     }
   };
 
@@ -72,7 +69,6 @@ function PlannerPage() {
       const calendarEvents = convertToCalendarEvents(tasks);
       setAssignedTasks(calendarEvents);
     } catch (error) {
-      // Handle errors
     }
   };
 
@@ -96,16 +92,14 @@ function PlannerPage() {
       return data;
     } catch (error) {
       console.error('Error fetching tasks:', error.message);
-      // Handle error fetching data
     }
   };
 
   const loadTasksAndCategories = async () => {
     try {
       const tasks = await fetchTasks();
-      setTasksAndCategories(tasks);
+      setTasksAndCategories(tasks || []);
     } catch (error) {
-      // Handle errors
     }
   };
 
@@ -142,10 +136,10 @@ function PlannerPage() {
   };
 
   const handleStatisticsPage = () => {
-    try{
-    console.log('Navigating to Statistics');
-    navigate('/Statistics');
-    } catch(error) {
+    try {
+      console.log('Navigating to Statistics');
+      navigate('/Statistics');
+    } catch (error) {
       console.error(error.message);
     }
   };
@@ -155,32 +149,32 @@ function PlannerPage() {
       <div className={styles['side-panel']}>
         <h2>PlannerApp</h2>
         <div>
-    {tasksAndCategories.reduce((categories, task) => {
-      const existingCategory = categories.find((cat) => cat.name === task.category);
+          {tasksAndCategories && tasksAndCategories.reduce((categories, task) => {
+            const existingCategory = categories.find((cat) => cat.name === task.category);
 
-      if (existingCategory) {
-        existingCategory.tasks.push(task.name);
-      } else {
-        categories.push({
-          name: task.category,
-          tasks: [task.name],
-        });
-      }
+            if (existingCategory) {
+              existingCategory.tasks.push(task.name);
+            } else {
+              categories.push({
+                name: task.category,
+                tasks: [task.name],
+              });
+            }
 
-      return categories;
-    }, []).map((category, index) => (
-      <React.Fragment key={index}>
-        <div>
-          <strong>Category: {category.name}</strong>
-        </div>
-        <ul>
-          {category.tasks.map((task, taskIndex) => (
-            <li key={taskIndex}>- {task}</li>
+            return categories;
+          }, []).map((category, index) => (
+            <React.Fragment key={index}>
+              <div>
+                <strong>Category: {category.name}</strong>
+              </div>
+              <ul>
+                {category.tasks.map((task, taskIndex) => (
+                  <li key={taskIndex}>- {task}</li>
+                ))}
+              </ul>
+            </React.Fragment>
           ))}
-        </ul>
-      </React.Fragment>
-    ))}
-  </div>
+        </div>
         <div className={styles['action-buttons-container']}>
           <button className={styles['action-button']} onClick={handleAddCategoryClick}>
             Add Category

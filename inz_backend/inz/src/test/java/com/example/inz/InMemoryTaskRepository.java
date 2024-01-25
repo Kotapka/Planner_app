@@ -1,6 +1,5 @@
 package com.example.inz;
 
-import com.example.inz.customer.operation.domain.Customer;
 import com.example.inz.task.provider.domain.Task;
 import com.example.inz.task.provider.domain.TaskRepository;
 import org.springframework.data.domain.Example;

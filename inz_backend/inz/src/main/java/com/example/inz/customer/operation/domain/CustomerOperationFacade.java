@@ -1,9 +1,9 @@
 package com.example.inz.customer.operation.domain;
 
-import com.example.inz.customer.operation.dto.CustomerDto;
-import com.example.inz.customer.operation.dto.LoginDto;
 import com.example.inz.customer.operation.dto.SignUpDto;
 import com.example.inz.customer.operation.exception.HttpException;
+import com.example.inz.customer.operation.dto.CustomerDto;
+import com.example.inz.customer.operation.dto.LoginDto;
 import com.example.inz.operations.MD5;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

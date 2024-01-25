@@ -1,5 +1,3 @@
-// Statistics.tsx
-
 import React, { useState, useEffect } from 'react';
 import styles from './Statistics.module.css';
 import { useNavigate } from 'react-router-dom';
@@ -103,7 +101,7 @@ function Statistics() {
     <div className={styles['statistics-container']}>
       <div className={styles['side-panel']}>
         <h2>PlannerApp</h2>
-        <div className={styles['logo']}>{/* Dodaj logo, jeśli masz odpowiednią grafikę */}</div>
+        <div className={styles['logo']}>{}</div>
         <div className={styles['action-buttons-container']}>
           <button onClick={handleGenerateStatistics} className={styles['logout-button']}>
             Generate Statistics

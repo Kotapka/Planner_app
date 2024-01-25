@@ -1,7 +1,7 @@
 package com.example.inz.customer.operation.domain;
 
-import com.example.inz.customer.operation.dto.CustomerDto;
 import com.example.inz.customer.operation.dto.SignUpDto;
+import com.example.inz.customer.operation.dto.CustomerDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")

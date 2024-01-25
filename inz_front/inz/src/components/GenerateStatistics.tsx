@@ -1,5 +1,3 @@
-// GenerateStatistics.tsx
-
 import React, { useState } from 'react';
 import styles from './GenerateStatistics.module.css';
 

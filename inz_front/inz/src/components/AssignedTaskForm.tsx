@@ -1,4 +1,3 @@
-// AssignedTaskForm.tsx
 import React, { useState, useEffect } from 'react';
 import styles from './AssignedTaskForm.module.css';
 import Cookies from 'js-cookie';
@@ -124,7 +123,6 @@ const AssignedTaskForm: React.FC<AssignedTaskFormProps> = ({ selectedDate, onClo
       });
 
       if (response.ok) {
-        // Dodatkowe działania po pomyślnym zapisie
         console.log('Task assigned successfully');
       } else {
         console.error('Failed to save assigned task');
