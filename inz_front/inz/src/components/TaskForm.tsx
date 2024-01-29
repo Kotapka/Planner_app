@@ -84,6 +84,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onClose }) => {
         setError('Something went wrong');
       } else {
         onClose();
+        window.location.reload()
       }
     } catch (error) {
       console.error('Network error or unexpected error:', error);

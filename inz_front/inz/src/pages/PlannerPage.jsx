@@ -22,6 +22,8 @@ function PlannerPage() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [tasksAndCategories, setTasksAndCategories] = useState([]);
+  const [selectedTaskDetails, setSelectedTaskDetails] = useState(null);
+
 
   useEffect(() => {
     loadAssignedTasks();
@@ -133,6 +135,9 @@ function PlannerPage() {
     setShowEdditAssignedTaskForm(true);
     setSelectedTaskId(event.id);
     setSelectedDate(event.start)
+
+    const taskDetails = tasksAndCategories.find((task) => task.id === event.id);
+    setSelectedTaskDetails(taskDetails);
   };
 
   const handleStatisticsPage = () => {
@@ -204,7 +209,14 @@ function PlannerPage() {
       </div>
       {showCategoryForm && <CategoryForm onClose={() => setShowCategoryForm(false)} />}
       {showTaskForm && <TaskForm onClose={() => setShowTaskForm(false)} />}
-      {showEdditAssignedTaskForm && <EditAssignedTaskForm taskId={selectedTaskId} selectedDate={selectedDate} onClose={() => setShowEdditAssignedTaskForm(false)} />}
+      {showEdditAssignedTaskForm && (
+  <EditAssignedTaskForm
+    taskId={selectedTaskId}
+    selectedDate={selectedDate}
+    taskDetails={selectedTaskDetails}
+    onClose={() => setShowEdditAssignedTaskForm(false)}
+  />
+)}
       {showAssignedTaskForm && selectedDate && (
         <AssignedTaskForm
           selectedDate={selectedDate}
